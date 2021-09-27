@@ -350,12 +350,9 @@ Access          public
 Parameters      isbn
 Method          DELETE
 */
-shapeAI.delete("/book/delete/:isbn", (req,res) => {    
-    const updatedBookDatabase = database.books.filter(
-        (book) => book.ISBN !== req.params.isbn);
-    //new array
-    database.books = updatedBookDatabase;
-    return res.json({books: database.books});
+shapeAI.delete("/book/delete/:isbn", async(req,res) => {    
+    const updatedBookDatabase = await BookModel.findOneAndDelete({ISBN: req.params.isbn});
+    return res.json({books: updatedBookDatabase});
 });
 
 /*
@@ -365,31 +362,37 @@ Access          public
 Parameters      isbn, authorId
 Method          DELETE
 */
-shapeAI.delete("/book/delete/author/:isbn/:authorId", (req,res) => {    
+shapeAI.delete("/book/delete/author/:isbn/:authorId", async(req,res) => {    
     //update book database
-    database.books.forEach((book) => {
-        //searching
-        if(book.ISBN === req.params.isbn){
-            //go inside object
-            const newAuthorList = book.authors.filter(
-                //filter authors and remove the authors with id given in params
-                (author) => author !== parseInt(req.params.authorId));
-        //updating list of authors
-        book.authors = newAuthorList;
-        return;
+    const updatedBook = await BookModel.findOneAndUpdate(
+        {
+            ISBN: req.params.isbn
+        },
+        {
+            $pull:{
+                authors: parseInt(req.params.authorId),
+            }
+        },
+        {
+            new: true,
         }
-    });
-    //update author database
-    database.authors.forEach((author) => {
-        if(author.id === req.params.authorId){
-            const newBooksList = author.books.filter(
-                (book) => book !== req.params.isbn);
-        author.books = newAuthorList;
-        return;
-        }
-    });
+    );
     
-    return res.json({book: database.books, author: database.authors});
+    //update author database
+    const updatedAuthor = await AuthorModel.findOneAndUpdate(
+        {
+            id: parseInt(req.params.authorId),
+        },
+        {
+            $pull:{
+                books: req.params.isbn,
+            },
+        },
+        {
+            new: true,
+        }
+    );
+    return res.json({book: updatedBook, author: updatedAuthor});
 });
 
 /*

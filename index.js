@@ -1,7 +1,8 @@
+require("dotenv").config();
 // Frame work
 const { response } = require("express");
 const express = require("express");
-
+const mongoose = require("mongoose");
 // Database
 const database = require("./database/index");
 
@@ -10,6 +11,10 @@ const shapeAI = express();
 
 // Configurations
 shapeAI.use(express.json());
+
+// Establish database connections
+mongoose.connect(process.env.MONGO_URL).then(() => console.log("Connection established!!"));
+// using environment variable for security purposes and code will be injected only at runtime
 
 /* 
 Route           /
@@ -51,6 +56,9 @@ Method          get
 shapeAI.get("/books/:category", (req,res) => {
     const getSpecificBooks = database.books.filter(
         (book) => book.category.includes(req.params.category));
+        //includes - array with only strings on number it will work
+        //not work for arrays in array
+        //matches req.params.category with every element returnes true/false
     
     if(getSpecificBooks.length === 0){
         return res.json({
@@ -62,7 +70,7 @@ shapeAI.get("/books/:category", (req,res) => {
 
 /*
 Route           /a
-Description     to get a list of books based on author id
+Description     to get a list of books based on author
 Access          public
 Parameters      authorId
 Method          get
@@ -78,7 +86,6 @@ shapeAI.get("/a/:authorId", (req,res) => {
     }
     return res.json({books: getSpecificBooks});
 });
-
 /* 
 Route           /authors
 Description     to get all the authors
@@ -155,7 +162,7 @@ shapeAI.get("/publications/:publication", (req,res) => {
     }
     return res.json({publication: getSpecificPublication});
 })
-/*             
+/*      
 Route           /publication
 Description     to get a list of publication based on a book's isbn
 Access          public
@@ -173,7 +180,6 @@ shapeAI.get("/publication/:isbn", (req,res) => {
     }
     return res.json({publications: getSpecificPublications});
 });
-
 /* 
 Route           /book/new
 Description     to post new book
@@ -281,7 +287,10 @@ Parameters      id
 Method          PUT
 */
 shapeAI.put("/publication/update/:id", (req,res) => {
+    //for updating one element (name)
+    
     database.publications.forEach((publication) => {
+        //for req.params.id you'll have to parse it
         if(publication.id === req.body.pubId) {
             publication.name = req.body.publicationName;
             return;
@@ -339,8 +348,11 @@ Method          DELETE
 shapeAI.delete("/book/delete/author/:isbn/:authorId", (req,res) => {    
     //update book database
     database.books.forEach((book) => {
+        //searching
         if(book.ISBN === req.params.isbn){
+            //go inside object
             const newAuthorList = book.authors.filter(
+                //filter authors and remove the authors with id given in params
                 (author) => author !== parseInt(req.params.authorId));
         //updating list of authors
         book.authors = newAuthorList;

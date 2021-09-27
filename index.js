@@ -183,4 +183,43 @@ shapeAI.get("/publication/:isbn", (req,res) => {
     return res.json({publications: getSpecificPublications});
 });
 
+/* 
+Route           /book/new
+Description     to post new book
+Access          public
+Parameters      none
+Method          POST
+*/
+shapeAI.post("/book/new", (req,res) => {
+    const {newBook} = req.body;
+    database.books.push(newBook);
+    return res.json({books: database.books, message: "book was added!!"});
+});
+
+/* 
+Route           /author/new
+Description     to add new author
+Access          public
+Parameters      none
+Method          POST
+*/
+shapeAI.post("/author/new", (req,res) => {
+    const {newAuthor} = req.body;
+    database.authors.push(newAuthor);
+    return res.json({authors: database.authors, message: "author was added!!"});
+});
+/* 
+Route           /publication/new
+Description     to add new publication
+Access          public
+Parameters      none
+Method          POST
+*/
+shapeAI.post("/publication/new", (req,res) => {
+    const {newPublication} = req.body;
+    database.publications.push(newPublication);
+    return res.json({publications: database.publications, message: "publication was added!!"});
+});
+
+
 shapeAI.listen(3000, () => console.log("server is running!"));

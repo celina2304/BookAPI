@@ -1,0 +1,80 @@
+// Requirements
+
+// We are a company that handles book publications
+
+//Data:--
+// Book
+// ISBN, TItle, Author, Language, Pub Date, Num Page, Catergory[]
+
+// Authors - who write books
+// Name, Id, Books[]
+
+// Publications - who sell books
+// Name, Id, Books[]
+
+// --------------------------------------------------------------------
+
+// Requirements
+
+// Books
+
+// WE NEED AN API
+
+// GET
+// to get all books ✅
+// to get specific books ✅
+// to get a list of books based on category ✅
+// to get a list of books based on authors ✅
+
+// POST
+// to upload a new book ✅
+
+// PUT
+// to update book details✅
+// to update/add new author✅
+
+// DELETE 
+// to delete a book ✅
+// to delete an author from a book ✅
+
+// --------------------------------------------------------------------
+
+// Author
+
+// WE NEED AN API
+
+// GET
+// to get all authors ✅
+// to get specific author ✅
+// to get a list of authors based on a book ✅
+
+// POST
+// to upload a new author ✅
+
+// PUT
+// to update author details ✅
+
+// DELETE
+// to delete a whole author ✅
+
+// --------------------------------------------------------------------
+
+// Publication
+
+// WE NEED AN API
+
+// GET
+// to get all publication ✅
+// to get specific publication ✅
+// to get a list of publication based on a book's isbn ✅
+
+// POST
+// to upload a new publication✅
+
+// PUT
+// to update publication name using id ✅
+// to update/add new book to a publication ✅
+
+// DELETE
+// to delete a book from publication ✅
+// to delete a publication ✅

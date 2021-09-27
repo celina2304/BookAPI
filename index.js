@@ -245,22 +245,39 @@ Access          public
 Parameters      isbn
 Method          PUT
 */
-shapeAI.put("/book/author/update/:isbn", (req,res) => {
+shapeAI.put("/book/author/update/:isbn", async(req,res) => {
     // update book database
-    database.books.forEach((book) => {
-        if(book.ISBN === req.params.isbn) {
-            return book.authors.push(req.body.newAuthor);
+    const updatedBook = await BookModel.findOneAndUpdate(
+        {
+            ISBN: req.params.isbn,
+        },
+        {
+            $addToSet: {
+                authors: req.body.newAuthor,
+                //push newauthor to authors
+            },
+        },
+        {
+            new: true,
         }
-    });
+    );
     //update author database
-    database.authors.forEach((author) => {
-        if(author.id === req.body.newAuthor) {
-            return author.books.push(req.params.isbn);
+    const updatedAuthor = await AuthorModel.findOneAndUpdate(
+        {
+            id: req.body.newAuthor,
+        },
+        {
+            $addToSet: {
+                books: req.params.isbn,
+            },
+        },
+        {
+            new: true,
         }
-    });
+    );
     return res.json({
-        books: database.books, 
-        authors: database.authors, 
+        books: updatedBook, 
+        authors: updatedAuthor, 
         message: "New author was added",});
 });
 

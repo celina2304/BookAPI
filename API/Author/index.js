@@ -59,9 +59,11 @@ Parameters      none
 Method          POST
 */
 Router.post("/new", async(req,res) => {
-    const {newAuthor} = req.body;
+    try {const {newAuthor} = req.body;
     AuthorModel.create(newAuthor);
-    return res.json({message: "author was added!!"});
+    return res.json({message: "author was added!!"});} catch(error){
+        return res.json({error: error.message});
+    };
 });
 /*
 Route           /author/update

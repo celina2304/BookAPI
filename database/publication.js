@@ -2,9 +2,19 @@ const mongoose = require("mongoose");
 
 // Creating an publication schema
 const PublicationSchema = mongoose.Schema({
-    id: Number,
-    name: String,
-    books: [String],
+    id: {
+        type: Number,
+        required: true,
+        minimum: 1,
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    books: {
+        type: [String],
+        required: true,
+    },
 });
 
 // Create a publication model
